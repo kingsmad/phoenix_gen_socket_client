@@ -1,8 +1,11 @@
 defmodule ExampleWeb.UserSocket do
   use Phoenix.Socket
+  require Logger
 
   ## Channels
   channel "ping", ExampleWeb.PingChannel
+
+  channel "notification:*", ExampleWeb.TwitterChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -19,8 +22,9 @@ defmodule ExampleWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  def connect(params, socket) do
+    Logger.info("Received new connection with params: #{inspect params}")
+    {:ok, socket |> assign(:user_id, params["user_id"])}
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
@@ -33,5 +37,5 @@ defmodule ExampleWeb.UserSocket do
   #     Example.Endpoint.broadcast("users_socket:#{user.id}", "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
-  def id(_socket), do: nil
+  def id(socket), do: "users_socket:#{socket.assigns.user_id}"
 end

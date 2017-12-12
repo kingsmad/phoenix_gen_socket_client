@@ -9,7 +9,8 @@ defmodule Example do
     children = [
       # Start the endpoint when the application starts
       supervisor(ExampleWeb.Endpoint, []),
-      worker(Example.SocketClient, [])
+      #worker(Example.SocketClient, [])
+      worker(Example.Simulator, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
@@ -21,7 +22,7 @@ defmodule Example do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    Example.Endpoint.config_change(changed, removed)
+    ExampleWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end
